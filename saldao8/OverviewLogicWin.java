@@ -82,7 +82,8 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
      */
     private void buildWindow()
     {
-        createMenu();       
+        createMenu();
+        //inspiration from: https://www.google.se/search?q=java+gui+for+simple+bank+system&rlz=1C1GCEU_svSE820SE821&source=lnms&tbm=isch&sa=X&ved=0ahUKEwj0pcTDqJbfAhWFCCwKHU3UC_kQ_AUIDigB&biw=1187&bih=618#imgrc=pcaBZZeDE5ShtM:
         createWindowContent();
         
         this.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
@@ -290,8 +291,10 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
         exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener(new MenuItemListener());
         // this is a beta version, therefore some options are inactive for the moment
-        loadMenuItem.setEnabled(false);
-        saveMenuItem.setEnabled(false);
+        loadMenuItem.setEnabled(true);
+        saveMenuItem.setEnabled(true);
+        loadMenuItem.addActionListener(new MenuItemListener());
+        saveMenuItem.addActionListener(new MenuItemListener());
         fileMenu.add(loadMenuItem);
         fileMenu.add(saveMenuItem);
         fileMenu.add(exitMenuItem);
@@ -628,10 +631,29 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
      */
     public class MenuItemListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            if(e.getSource() == exitMenuItem)
-            { 
+            
+            String menuItemText = e.getActionCommand();
+
+            if(menuItemText.equals("Exit"))
+            {
                 System.exit(0);
             }
+            
+            if(menuItemText.equals("Save"))
+            {
+                bankLogic.saveFullCustomersInfo();
+            }
+            
+            if(menuItemText.equals("Load"))
+            {
+                bankLogic.loadFullCustomersInfo();
+                customerList.setListData(bankLogic.getAllCustomers().toArray());
+            }
+                
+//            if(e.getSource() == exitMenuItem)
+//            { 
+//                System.exit(0);
+//            }
         }
     }
     
@@ -738,20 +760,24 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
      * 
      * @param personalIdentityNumber - belonging to the customer of interest
      * @param accountId - the account ID in question
-     * @return string containing all the account's transactions
+     * @return list of strings containing all the account's transactions
      */    
-    public String getTransactions(String personalIdentityNumber, int accountId)
+    public ArrayList<String> getTransactions(String personalIdentityNumber, int accountId)
     {
-        ArrayList<String> transactionsList = new ArrayList<String>();
-        transactionsList = bankLogic.getTransactions(personalIdentityNumber, accountId);
-        
-        String transactions = new String();
-        for(String transaction : transactionsList)
-        {
-            transactions += transaction + "\n";
-        }
-        
-        return transactions;
+        return bankLogic.getTransactions(personalIdentityNumber, accountId);
+    }
+    
+    /**
+     * Provides customer's account balance
+     * 
+     * @param personalIdentityNumber - belonging to the customer of interest
+     * @param accountId - the account ID in question
+     * @return string containing all the account's balance
+     */    
+    public String getBalance(String personalIdentityNumber, int accountId)
+    {
+        double balance = bankLogic.getBalance(personalIdentityNumber, accountId);
+        return Double.toString(balance);        
     }
 
 }

@@ -1,5 +1,7 @@
 package saldao8;
 
+import java.io.Serializable;
+
 /**
  * This class implements a customer and manages the customer's information and
  * accounts.
@@ -9,7 +11,7 @@ package saldao8;
 
 import java.util.ArrayList;
 
-public class Customer implements AccountTypes
+public class Customer implements AccountTypes, Serializable
 {
     private String firstName, lastName, personalIdentityNumber;
     private ArrayList<Account> accounts = new ArrayList<Account>();
@@ -125,6 +127,24 @@ public class Customer implements AccountTypes
         }
         
         return transactions;
+    }
+    
+    /**
+     *  Provides the account's balance - saldao
+     *
+     * @param accountId - the account ID in question
+     * @return customer account balance
+     */
+    public double getBalance(int accountId)
+    {
+        double balance = 0;
+        Account account = findAccount(accountId);
+        if(account != null)
+        {
+            return account.getBalance();
+        }
+        
+        return balance;
     }
 
     /**

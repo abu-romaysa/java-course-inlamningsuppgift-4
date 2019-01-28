@@ -12,6 +12,16 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -75,8 +85,15 @@ public class TransactionHistoryDialog extends JDialog implements ActionListener
         
         // build scrollable text area section
         JTextArea transactionTextArea = new JTextArea(5, 20);
-        String transactions = overviewLogicWin.getTransactions(personalIdentityNumber, accountId);
-        transactionTextArea.setText(transactions);
+        ArrayList<String> transactions = overviewLogicWin.getTransactions(personalIdentityNumber, accountId);
+        
+        String transactionsText = new String();
+        for(String transaction : transactions)
+        {
+            transactionsText += transaction + "\n";
+        }
+        
+        transactionTextArea.setText(transactionsText);
         transactionTextArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         transactionTextArea.setEditable(false);
         // add a vertical scrollbar to the text area 
@@ -86,8 +103,11 @@ public class TransactionHistoryDialog extends JDialog implements ActionListener
         
         // build button's section
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+        JButton saveButton = new JButton("Save to file");
         JButton closeButton = new JButton("Close");
+        buttonPanel.add(saveButton);
         buttonPanel.add(closeButton);
+        saveButton.addActionListener(this);
         closeButton.addActionListener(this);
         this.add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -102,6 +122,49 @@ public class TransactionHistoryDialog extends JDialog implements ActionListener
         if(buttonText.equals("Close"))
         {
             this.dispose();     
+        }
+        
+        if(buttonText.equals("Save to file"))
+        {
+            try
+            {
+                FileWriter fw = new FileWriter(new File("saldao8_Files/" + "transactions-" + "account-" + this.accountId + ".txt"));
+                
+                // output current date
+                Date currentDate = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");           
+                String transactionDate = dateFormat.format(currentDate);  
+                fw.write("Printout date: " + transactionDate);
+                fw.write(System.lineSeparator()); //https://stackoverflow.com/a/18549788 //https://examples.javacodegeeks.com/core-java/io/filewriter/java-filewriter-example/
+                
+                // output transactions
+                fw.write(System.lineSeparator());
+                fw.write("Transactions:");
+                ArrayList<String> transactions = overviewLogicWin.getTransactions(personalIdentityNumber, accountId);
+                for(String transaction : transactions)
+                {
+                    fw.write(System.lineSeparator());
+                    fw.write(transaction);
+                }
+                fw.write(System.lineSeparator());
+
+                // output balance
+                String balance = overviewLogicWin.getBalance(personalIdentityNumber, accountId);
+                fw.write(System.lineSeparator());
+                fw.write("Balance: " + balance);
+                
+                fw.close();
+            }
+            catch(FileNotFoundException ex)
+            {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+            }
+            catch(IOException ex)
+            {
+                // TODO Auto-generated catch block
+                ex.printStackTrace();
+            }
         }
     }
 }

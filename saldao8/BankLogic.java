@@ -1,5 +1,12 @@
 package saldao8;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * This class implements the bank logic that manages customers and their
  * accounts
@@ -288,6 +295,100 @@ public class BankLogic implements AccountTypes
         }
         
         return transactions;
+    }
+    
+    /**
+     *  Provides the account's balance - saldao
+     *
+     * @param personalIdentityNumber - belonging to the customer of interest
+     * @param accountId - the account ID in question
+     * @return customer account balance
+     */
+    public double getBalance(String personalIdentityNumber, int accountId)
+    {
+        double balance = 0;
+        Customer customer = findCustomer(personalIdentityNumber);
+        if(customer != null)
+        {
+            return customer.getBalance(accountId);
+        }
+        
+        return balance;
+    }
+    
+    
+    public void saveFullCustomersInfo()
+    {
+        try
+        {
+            FileOutputStream fos = new FileOutputStream("saldao8_Files/customer-full-info.dat");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            
+            oos.writeInt(customers.size());
+            oos.writeInt(Account.getAccountIdCounter());
+            
+            for(Customer customer : customers)
+            {
+                oos.writeObject(customer);
+            }
+            
+            oos.close();
+        }
+        catch(FileNotFoundException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch(IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    
+    public void loadFullCustomersInfo()
+    {
+        try
+        {
+            FileInputStream fos = new FileInputStream("saldao8_Files/customer-full-info.dat");
+            ObjectInputStream ois = new ObjectInputStream(fos);
+            
+            int nrOfCustomers = (int) ois.readInt();
+            Account.setAccountIdCounter((int) ois.readInt());
+            
+            for(int i = 0; i < nrOfCustomers; i++)
+            {
+                Customer c_file = (Customer) ois.readObject();
+                customers.add(c_file);
+                
+//                System.out.println(c_file.getPersonalIdentityNumber());
+//                System.out.println(c_file.getAccountIds());
+//                
+//                ArrayList<Integer> accountIds_t = c_file.getAccountIds();
+//                for(Integer accountId_t : accountIds_t)
+//                {
+//                    System.out.println(c_file.getAccount(accountId_t));
+//                    System.out.println(c_file.getTransactions(accountId_t));
+//                }                
+            }
+
+            ois.close();
+        }
+        catch(FileNotFoundException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch(IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch(ClassNotFoundException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     /**

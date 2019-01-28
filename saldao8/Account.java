@@ -1,5 +1,7 @@
 package saldao8;
 
+import java.io.Serializable;
+
 /**
  * This class implements an abstract base class for accounts and it's needed support and management
  * as transactions, account information etc.
@@ -11,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public abstract class Account
+public abstract class Account implements Serializable
 {
     private double balance;
     private int accountId;
@@ -79,6 +81,24 @@ public abstract class Account
     public int getAccountId()
     {
         return accountId;
+    }
+    
+    /**
+     * Provides the global account ID counter
+     * 
+     * @return global account ID counter
+     */
+    public static int getAccountIdCounter()
+    {
+        return accountIdCounter;
+    }
+    
+    /**
+     * Sets the global account ID counter
+     */
+    public static void setAccountIdCounter(int counterValue)
+    {
+        accountIdCounter = counterValue;
     }
 
     /**
