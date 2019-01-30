@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 public class BankLogic implements AccountTypes
 {
+    public static final String DATA_FILE_NAME = "saldao8_Files/customer-full-info.dat";
     private ArrayList<Customer> customers = new ArrayList<Customer>();
 
     /**
@@ -317,6 +318,9 @@ public class BankLogic implements AccountTypes
     }
     
     
+    /**
+     * Saves all customer information in a data file
+     */
     public void saveFullCustomersInfo()
     {
         try
@@ -331,7 +335,10 @@ public class BankLogic implements AccountTypes
             {
                 oos.writeObject(customer);
             }
-            
+         
+            //https://softwareengineering.stackexchange.com/q/363161 - faild to close but inout
+            //https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html
+            //https://docs.oracle.com/javase/7/docs/api/java/io/OutputStreamWriter.html#close()
             oos.close();
         }
         catch(FileNotFoundException e)
@@ -346,11 +353,14 @@ public class BankLogic implements AccountTypes
         }
     }
     
+    /**
+     * Loads all customer information from a previously saved data file
+     */
     public void loadFullCustomersInfo()
     {
         try
         {
-            FileInputStream fos = new FileInputStream("saldao8_Files/customer-full-info.dat");
+            FileInputStream fos = new FileInputStream("saldao8_Files/customer-full-info.dat"); // todo check if file exists first
             ObjectInputStream ois = new ObjectInputStream(fos);
             
             int nrOfCustomers = (int) ois.readInt();
@@ -384,7 +394,7 @@ public class BankLogic implements AccountTypes
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        catch(ClassNotFoundException e)
+        catch(ClassNotFoundException e) // todo merge exceptions?
         {
             // TODO Auto-generated catch block
             e.printStackTrace();

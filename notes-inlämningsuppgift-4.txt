@@ -1,0 +1,31 @@
+transactionHistDialog
+- filewriter- direkt i konstr fil + new file ist för string vrf
+- lineseparator
+- gettransactions returns arraylist nu ist string för filen reagerar ej på %n
+- added getbalance metoden för att kunna anv här och skriva till fil
+- close utan catch?
+- var placeras dialogrutor för feedback dvs ordning så att den exekveras etc
+
+- save button disabled för att ge feedback
+- dialogrutor
+- ett meddelande för alla fel med getmessage
+- när anses som successfully
+
+- har allt kommit med annars om inte detta? dvs close
+- nothing to do here except log the exception - bra för att analysera sitt programs performance
+
+
+banklogic
+- DATA_FILE_NAME för den som gör själva skaparndet 
+
+overviewWin
+- efter load inaktivera load annars två ggr samma data dvs kopior
+- 
+
+
+
+- ftersom klassvariabler inte sparas med objektet måste du på något vis hantera så att kontonummer för nya konton inte startar på 1001 om sparade konton har lästs in.
+-- dubbelkolla innan behålla nyaste?
+-- bara ladda automatiskt vid start
+
+I den sista inlämningsuppgiften (Inlämningsuppgift 4) ska systemet byggas ut med möjlighet att spara och läsa bankkunder och därtill hörande konton till och från fil. Gränssnittet ska redan nu innehålla komponenter för detta (även om det i nuläget inte ska finnas någon funktionalitet kopplad till dessa komponenter).

@@ -14,6 +14,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
@@ -39,7 +40,10 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
     public static final int DEPOSIT = 1;
     public static final int WITHDRAW = 2;
     
-    private JMenuItem exitMenuItem = new JMenuItem("Exit"); 
+    // menu related
+    private JMenuItem exitMenuItem;
+    private JMenuItem saveMenuItem; 
+    private JMenuItem loadMenuItem; 
 
     // customer section related
     private JPanel customersPanel = new JPanel();
@@ -83,7 +87,6 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
     private void buildWindow()
     {
         createMenu();
-        //inspiration from: https://www.google.se/search?q=java+gui+for+simple+bank+system&rlz=1C1GCEU_svSE820SE821&source=lnms&tbm=isch&sa=X&ved=0ahUKEwj0pcTDqJbfAhWFCCwKHU3UC_kQ_AUIDigB&biw=1187&bih=618#imgrc=pcaBZZeDE5ShtM:
         createWindowContent();
         
         this.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
@@ -286,12 +289,12 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
         JMenuBar menuBar = new JMenuBar();
         
         JMenu fileMenu = new JMenu("FILE");        
-        JMenuItem loadMenuItem = new JMenuItem("Load");
-        JMenuItem saveMenuItem = new JMenuItem("Save");
+        loadMenuItem = new JMenuItem("Load");
+        saveMenuItem = new JMenuItem("Save");
         exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener(new MenuItemListener());
         // this is a beta version, therefore some options are inactive for the moment
-        loadMenuItem.setEnabled(true);
+        this.setEnableState();
         saveMenuItem.setEnabled(true);
         loadMenuItem.addActionListener(new MenuItemListener());
         saveMenuItem.addActionListener(new MenuItemListener());
@@ -631,29 +634,23 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
      */
     public class MenuItemListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            
-            String menuItemText = e.getActionCommand();
-
-            if(menuItemText.equals("Exit"))
+                        
+            if(e.getSource() == exitMenuItem)
             {
                 System.exit(0);
             }
             
-            if(menuItemText.equals("Save"))
+            if(e.getSource() == saveMenuItem)
             {
                 bankLogic.saveFullCustomersInfo();
             }
             
-            if(menuItemText.equals("Load"))
+            if(e.getSource() == loadMenuItem)
             {
                 bankLogic.loadFullCustomersInfo();
                 customerList.setListData(bankLogic.getAllCustomers().toArray());
+                loadMenuItem.setEnabled(false);
             }
-                
-//            if(e.getSource() == exitMenuItem)
-//            { 
-//                System.exit(0);
-//            }
         }
     }
     
@@ -778,6 +775,19 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
     {
         double balance = bankLogic.getBalance(personalIdentityNumber, accountId);
         return Double.toString(balance);        
+    }
+    
+    
+    /**
+     * Inactivates the load menu option if no data file exists
+     */
+    public void setEnableState()
+    {        
+        File dataFile = new File(BankLogic.DATA_FILE_NAME);
+        if(!dataFile.isFile())
+        {            
+            loadMenuItem.setEnabled(false);
+        }
     }
 
 }

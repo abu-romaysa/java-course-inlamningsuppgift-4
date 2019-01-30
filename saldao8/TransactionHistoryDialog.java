@@ -26,6 +26,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -39,6 +40,7 @@ public class TransactionHistoryDialog extends JDialog implements ActionListener
 
     private JPanel accountPanel = new JPanel();
     private JPanel buttonPanel = new JPanel();
+    JButton saveButton;
     
     private OverviewLogicWin overviewLogicWin;
     private int accountId;
@@ -103,7 +105,7 @@ public class TransactionHistoryDialog extends JDialog implements ActionListener
         
         // build button's section
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-        JButton saveButton = new JButton("Save to file");
+        saveButton = new JButton("Save to file");
         JButton closeButton = new JButton("Close");
         buttonPanel.add(saveButton);
         buttonPanel.add(closeButton);
@@ -126,16 +128,21 @@ public class TransactionHistoryDialog extends JDialog implements ActionListener
         
         if(buttonText.equals("Save to file"))
         {
+            FileWriter fw = null;
+            String filename = null;
+            boolean writtenSuccessfully = false;            
             try
             {
-                FileWriter fw = new FileWriter(new File("saldao8_Files/" + "transactions-" + "account-" + this.accountId + ".txt"));
+                filename = "saldao8_Files/" + "transactions-" + "account-" + this.accountId + ".txt";
+                fw = new FileWriter(new File(filename));
                 
                 // output current date
                 Date currentDate = new Date();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");           
                 String transactionDate = dateFormat.format(currentDate);  
                 fw.write("Printout date: " + transactionDate);
-                fw.write(System.lineSeparator()); //https://stackoverflow.com/a/18549788 //https://examples.javacodegeeks.com/core-java/io/filewriter/java-filewriter-example/
+                //https://stackoverflow.com/a/18549788 //https://examples.javacodegeeks.com/core-java/io/filewriter/java-filewriter-example/
+                fw.write(System.lineSeparator()); 
                 
                 // output transactions
                 fw.write(System.lineSeparator());
@@ -153,19 +160,32 @@ public class TransactionHistoryDialog extends JDialog implements ActionListener
                 fw.write(System.lineSeparator());
                 fw.write("Balance: " + balance);
                 
-                fw.close();
-            }
-            catch(FileNotFoundException ex)
-            {
-                // TODO Auto-generated catch block
-                ex.printStackTrace();
+                writtenSuccessfully = true;
             }
             catch(IOException ex)
             {
-                // TODO Auto-generated catch block
-                ex.printStackTrace();
+                //https://stackoverflow.com/q/6779787
+                //https://examples.javacodegeeks.com/core-java/io/ioexception/java-io-ioexception-how-to-solve-ioexception/
+                JOptionPane.showMessageDialog(null, "IO operation failed. IOException caught with message: " + "\n" + ex.getMessage(), "Alert", JOptionPane.ERROR_MESSAGE);
+                
             }
-        }
+            finally {
+                if (fw != null) {
+                    try {
+                        fw.close(); // todo catch? https://stackoverflow.com/a/5122970
+                        
+                        if(writtenSuccessfully)
+                        {
+                            JOptionPane.showMessageDialog(null, "Transactions successfully saved to file: " + filename); // har allt kommit med annars om inte detta?
+                            saveButton.setEnabled(false);
+                        }
+                    }
+                    catch (IOException ex) {
+                        // nothing to do here except log the exception
+                    }
+                }
+            }
+        } // todo give feedback to customer if successfull or not
     }
 }
 
