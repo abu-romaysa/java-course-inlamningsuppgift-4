@@ -294,7 +294,8 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
         exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.addActionListener(new MenuItemListener());
         // this is a beta version, therefore some options are inactive for the moment
-        this.setEnableState();
+        // disable the load option if there are no available customers stored
+        loadMenuItem.setEnabled(bankLogic.sysHasStoredCustomers());
         saveMenuItem.setEnabled(true);
         loadMenuItem.addActionListener(new MenuItemListener());
         saveMenuItem.addActionListener(new MenuItemListener());
@@ -642,12 +643,12 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
             
             if(e.getSource() == saveMenuItem)
             {
-                bankLogic.saveFullCustomersInfo();
+                bankLogic.saveAllCustomersInfo();
             }
             
             if(e.getSource() == loadMenuItem)
             {
-                bankLogic.loadFullCustomersInfo();
+                bankLogic.loadAllCustomersInfo();
                 customerList.setListData(bankLogic.getAllCustomers().toArray());
                 loadMenuItem.setEnabled(false);
             }
@@ -765,29 +766,16 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
     }
     
     /**
-     * Provides customer's account balance
+     * Saves an accounts transactions
      * 
-     * @param personalIdentityNumber - belonging to the customer of interest
      * @param accountId - the account ID in question
-     * @return string containing all the account's balance
-     */    
-    public String getBalance(String personalIdentityNumber, int accountId)
-    {
-        double balance = bankLogic.getBalance(personalIdentityNumber, accountId);
-        return Double.toString(balance);        
-    }
-    
-    
-    /**
-     * Inactivates the load menu option if no data file exists
+     * @param personalIdentityNumber - belonging to the customer of interest
+     * @return true if the transactions could be saved successfully
      */
-    public void setEnableState()
-    {        
-        File dataFile = new File(BankLogic.DATA_FILE_NAME);
-        if(!dataFile.isFile())
-        {            
-            loadMenuItem.setEnabled(false);
-        }
+    public boolean saveAccountTransactions(int accountId, String personalIdentityNumber)
+    {
+        ArrayList<String> transactions = this.getTransactions(personalIdentityNumber, accountId);
+        return bankLogic.saveAccountTransactions(accountId, transactions, personalIdentityNumber);
     }
 
 }

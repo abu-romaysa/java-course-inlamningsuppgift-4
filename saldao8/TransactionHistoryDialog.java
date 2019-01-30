@@ -128,64 +128,11 @@ public class TransactionHistoryDialog extends JDialog implements ActionListener
         
         if(buttonText.equals("Save to file"))
         {
-            FileWriter fw = null;
-            String filename = null;
-            boolean writtenSuccessfully = false;            
-            try
+            if(overviewLogicWin.saveAccountTransactions(this.accountId, personalIdentityNumber))
             {
-                filename = "saldao8_Files/" + "transactions-" + "account-" + this.accountId + ".txt";
-                fw = new FileWriter(new File(filename));
-                
-                // output current date
-                Date currentDate = new Date();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");           
-                String transactionDate = dateFormat.format(currentDate);  
-                fw.write("Printout date: " + transactionDate);
-                //https://stackoverflow.com/a/18549788 //https://examples.javacodegeeks.com/core-java/io/filewriter/java-filewriter-example/
-                fw.write(System.lineSeparator()); 
-                
-                // output transactions
-                fw.write(System.lineSeparator());
-                fw.write("Transactions:");
-                ArrayList<String> transactions = overviewLogicWin.getTransactions(personalIdentityNumber, accountId);
-                for(String transaction : transactions)
-                {
-                    fw.write(System.lineSeparator());
-                    fw.write(transaction);
-                }
-                fw.write(System.lineSeparator());
-
-                // output balance
-                String balance = overviewLogicWin.getBalance(personalIdentityNumber, accountId);
-                fw.write(System.lineSeparator());
-                fw.write("Balance: " + balance);
-                
-                writtenSuccessfully = true;
+                saveButton.setEnabled(false);
             }
-            catch(IOException ex)
-            {
-                //https://stackoverflow.com/q/6779787
-                //https://examples.javacodegeeks.com/core-java/io/ioexception/java-io-ioexception-how-to-solve-ioexception/
-                JOptionPane.showMessageDialog(null, "IO operation failed. IOException caught with message: " + "\n" + ex.getMessage(), "Alert", JOptionPane.ERROR_MESSAGE);
-                
-            }
-            finally {
-                if (fw != null) {
-                    try {
-                        fw.close(); // todo catch? https://stackoverflow.com/a/5122970
-                        
-                        if(writtenSuccessfully)
-                        {
-                            JOptionPane.showMessageDialog(null, "Transactions successfully saved to file: " + filename); // har allt kommit med annars om inte detta?
-                            saveButton.setEnabled(false);
-                        }
-                    }
-                    catch (IOException ex) {
-                        // nothing to do here except log the exception
-                    }
-                }
-            }
-        } // todo give feedback to customer if successfull or not
+        }
     }
 }
 

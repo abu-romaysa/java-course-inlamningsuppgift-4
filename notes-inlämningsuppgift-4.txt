@@ -22,7 +22,15 @@ overviewWin
 - efter load inaktivera load annars två ggr samma data dvs kopior
 - 
 
+filehandler 
+- static?
+- egentligen inte gui saker men om mer tid så kanske egen klass som ger info - men komplicerat
+- bara ändra i filehandler om databas
+- Please restore needed file an restart the program
+- ej meddelande om save sys file bara irriterande och samma fil ju
 
+- försöka utan undantag - komplicerade, långsammare s423, svårare att anv föa alla anv måste hantera
+- s426 försaök undvik undantagssituationer om ej möjligt så lokalisera problemet => enklare och snabbare
 
 - ftersom klassvariabler inte sparas med objektet måste du på något vis hantera så att kontonummer för nya konton inte startar på 1001 om sparade konton har lästs in.
 -- dubbelkolla innan behålla nyaste?

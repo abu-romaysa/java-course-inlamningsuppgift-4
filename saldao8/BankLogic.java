@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 public class BankLogic implements AccountTypes
 {
-    public static final String DATA_FILE_NAME = "saldao8_Files/customer-full-info.dat";
     private ArrayList<Customer> customers = new ArrayList<Customer>();
+    private FileHandler fileHandler = new FileHandler(); 
 
     /**
      * Constructor
@@ -317,90 +317,46 @@ public class BankLogic implements AccountTypes
         return balance;
     }
     
-    
     /**
-     * Saves all customer information in a data file
+     * Saves all customer information
      */
-    public void saveFullCustomersInfo()
+    public void saveAllCustomersInfo()
     {
-        try
-        {
-            FileOutputStream fos = new FileOutputStream("saldao8_Files/customer-full-info.dat");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            
-            oos.writeInt(customers.size());
-            oos.writeInt(Account.getAccountIdCounter());
-            
-            for(Customer customer : customers)
-            {
-                oos.writeObject(customer);
-            }
-         
-            //https://softwareengineering.stackexchange.com/q/363161 - faild to close but inout
-            //https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html
-            //https://docs.oracle.com/javase/7/docs/api/java/io/OutputStreamWriter.html#close()
-            oos.close();
-        }
-        catch(FileNotFoundException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch(IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        fileHandler.saveCustomersToStorage(customers);
     }
     
     /**
-     * Loads all customer information from a previously saved data file
+     * Loads all customer information from previously saved data
      */
-    public void loadFullCustomersInfo()
+    public void loadAllCustomersInfo()
     {
-        try
-        {
-            FileInputStream fos = new FileInputStream("saldao8_Files/customer-full-info.dat"); // todo check if file exists first
-            ObjectInputStream ois = new ObjectInputStream(fos);
-            
-            int nrOfCustomers = (int) ois.readInt();
-            Account.setAccountIdCounter((int) ois.readInt());
-            
-            for(int i = 0; i < nrOfCustomers; i++)
-            {
-                Customer c_file = (Customer) ois.readObject();
-                customers.add(c_file);
-                
-//                System.out.println(c_file.getPersonalIdentityNumber());
-//                System.out.println(c_file.getAccountIds());
-//                
-//                ArrayList<Integer> accountIds_t = c_file.getAccountIds();
-//                for(Integer accountId_t : accountIds_t)
-//                {
-//                    System.out.println(c_file.getAccount(accountId_t));
-//                    System.out.println(c_file.getTransactions(accountId_t));
-//                }                
-            }
-
-            ois.close();
-        }
-        catch(FileNotFoundException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch(IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch(ClassNotFoundException e) // todo merge exceptions?
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        customers.addAll(fileHandler.loadCustomersFromStorage());
     }
 
+    /**
+     * Saves all transactions belonging to a specific account
+     * 
+     * @param accountId - the account ID in question
+     * @param transactions - transactions to be saved
+     * @param personalIdentityNumber - belonging to the customer of interest
+     * @return true if the transactions could be saved successfully
+     */
+    public boolean saveAccountTransactions(int accountId, ArrayList<String> transactions, String personalIdentityNumber)
+    {
+        double balance = this.getBalance(personalIdentityNumber, accountId);
+        return fileHandler.saveTransactionsToStorage(accountId, transactions, Double.toString(balance));
+    }
+    
+    /**
+     * Checks if the system has any stored data
+     * 
+     * @return true if stored data exists
+     */
+    public boolean sysHasStoredCustomers()
+    {
+        return fileHandler.hasStoredCustomers();
+    }
+    
     /**
      * Searches for a customer with a specific personal identity number
      * 
