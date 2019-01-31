@@ -20,7 +20,11 @@ banklogic
 
 overviewWin
 - efter load inaktivera load annars två ggr samma data dvs kopior
-- 
+- kolla pnr format - https://stackoverflow.com/a/40097058
+- kolla bokstäver på namn - https://stackoverflow.com/a/3059373
+- mkt kollar med att man måste markera kund och/eller konto som förenklar och undviker
+- // remove all space characters (that the user might accidentally added)
+                //https://stackoverflow.com/a/16035109
 
 filehandler 
 - static?
@@ -36,4 +40,7 @@ filehandler
 -- dubbelkolla innan behålla nyaste?
 -- bara ladda automatiskt vid start
 
+transactiondialog
+- numberformatexception - enklare än algoritm för att kolla ...bättre om hanteras på samma ställe
 I den sista inlämningsuppgiften (Inlämningsuppgift 4) ska systemet byggas ut med möjlighet att spara och läsa bankkunder och därtill hörande konton till och från fil. Gränssnittet ska redan nu innehålla komponenter för detta (även om det i nuläget inte ska finnas någon funktionalitet kopplad till dessa komponenter).
+- isFile eller boken https://stackoverflow.com/a/1816707

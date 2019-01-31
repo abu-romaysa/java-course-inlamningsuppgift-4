@@ -83,6 +83,7 @@ public class FileHandler
 
         // already checked the existence when creating the GUI, but the path or file
         // could been removed or modified in between (low possibility though)
+        //https://stackoverflow.com/a/1816707
         if(dataFile.isFile())
         {
             ObjectInputStream ois = null;

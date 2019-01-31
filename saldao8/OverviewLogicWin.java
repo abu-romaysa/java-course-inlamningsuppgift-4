@@ -428,24 +428,37 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
 
             if(buttonText.equals("Add"))
             {
-                if(!customerPNRTextField.getText().equals(""))
+                // remove all space characters (that the user might accidentally added)
+                //https://stackoverflow.com/a/16035109
+                String firstName = customerFirstNameTextField.getText().replaceAll("\\s","");;
+                String lastName = customerLastNameTextField.getText().replaceAll("\\s","");;
+                String personalIdentityNumber = customerPNRTextField.getText().replaceAll("\\s","");;
+                
+                if(!personalIdentityNumber.equals("") && hasValidPNRFormat(personalIdentityNumber))
                 {
-                    if(bankLogic.createCustomer(customerFirstNameTextField.getText(), 
-                            customerLastNameTextField.getText(), 
-                            customerPNRTextField.getText()))
+                    if(hasOnlyLetters(firstName) && hasOnlyLetters(lastName))
                     {
-                        // update the customer list and clear the text fields to facilitate further additions of customers
-                        customerList.setListData(bankLogic.getAllCustomers().toArray());
-                        clearTextFields();
+                        if(bankLogic.createCustomer(firstName, 
+                                lastName, 
+                                personalIdentityNumber))
+                        {
+                            // update the customer list and clear the text fields to facilitate further additions of customers
+                            customerList.setListData(bankLogic.getAllCustomers().toArray());
+                            clearTextFields();
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(null, "Customer already exists", "Alert", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog(null, "Customer already exists", "Alert", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Only letters are aloud for customer names!", "Alert", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "Please type customer's personal identity number", "Alert", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Please type a valid customer personal identity number (in format):\nYYYYMMDD-XXXX");
                 }
             }
 
@@ -776,6 +789,40 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
     {
         ArrayList<String> transactions = this.getTransactions(personalIdentityNumber, accountId);
         return bankLogic.saveAccountTransactions(accountId, transactions, personalIdentityNumber);
+    }
+    
+    /**
+     * Check if the personal identity number has the right format
+     * 
+     * @param personalIdentityNumber - personal identity number in question to check
+     * @return true if it has the right format
+     */
+    private boolean hasValidPNRFormat(String personalIdentityNumber)
+    {
+        //https://stackoverflow.com/a/40097058
+        return personalIdentityNumber.matches("\\d\\d\\d\\d\\d\\d\\d\\d-\\d\\d\\d\\d");
+    }
+    
+    /**
+     * Check if a string only contains of letters
+     * 
+     * @param input - string to check
+     * @return true if it only contains of letters
+     */
+    private boolean hasOnlyLetters(String input)
+    {        
+      //https://stackoverflow.com/a/3059373
+      System.out.println(input);
+      for(int i = 0; i<input.length(); i++)
+      {
+         if(!Character.isLetter(input.charAt(i)))
+         {
+             System.out.println(input.charAt(i));
+            return false;
+         }
+      }
+      
+      return true;
     }
 
 }

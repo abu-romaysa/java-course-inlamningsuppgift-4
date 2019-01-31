@@ -105,28 +105,37 @@ public class TransactionDialog extends JDialog implements ActionListener
 
         if(e.getSource() == actionButton)
         {
-            if(action == overviewLogicWin.DEPOSIT)
+            try
             {
-                if(overviewLogicWin.deposit(personalIdentityNumber, accountId, Double.parseDouble(amountTextField.getText())))
+                double amount = Double.parseDouble(amountTextField.getText());
+                
+                if(action == overviewLogicWin.DEPOSIT)
                 {
-                    this.dispose();
+                    if(overviewLogicWin.deposit(personalIdentityNumber, accountId, amount))
+                    {
+                        this.dispose();
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "Transaction could not be performed!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "Transaction could not be performed!", "Alert", JOptionPane.ERROR_MESSAGE);
-                }
+                    if(overviewLogicWin.withdraw(personalIdentityNumber, accountId, amount))
+                    {
+                        this.dispose();
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "Transaction could not be performed!", "Alert", JOptionPane.ERROR_MESSAGE);
+                    }
+                } 
             }
-            else
+            catch(NumberFormatException nfe)
             {
-                if(overviewLogicWin.withdraw(personalIdentityNumber, accountId, Double.parseDouble(amountTextField.getText())))
-                {
-                    this.dispose();
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "Transaction could not be performed!", "Alert", JOptionPane.ERROR_MESSAGE);
-                }
-            }     
+                JOptionPane.showMessageDialog(null, "Please insert only numbers!", "Alert", JOptionPane.ERROR_MESSAGE);
+            }
        }
         
         if(e.getSource() == abortButton)
