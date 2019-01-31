@@ -1,7 +1,5 @@
 package saldao8;
 
-import java.io.Serializable;
-
 /**
  * This class implements a customer and manages the customer's information and
  * accounts.
@@ -9,6 +7,7 @@ import java.io.Serializable;
  * @author Salim Daoud, saldao-8
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Customer implements AccountTypes, Serializable

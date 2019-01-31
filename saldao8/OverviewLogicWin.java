@@ -104,7 +104,8 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
     {
         JLabel windowTitleLabel = new JLabel("SYSTEM OVERVIEW");
         JPanel titlePanel = new JPanel();
-        windowTitleLabel.setFont(new Font("Serif", Font.BOLD, 20)); //https://stackoverflow.com/a/29148550
+        //https://stackoverflow.com/a/29148550
+        windowTitleLabel.setFont(new Font("Serif", Font.BOLD, 20));
         titlePanel.add(windowTitleLabel);
         titlePanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         

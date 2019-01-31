@@ -1,5 +1,11 @@
 package saldao8;
 
+/**
+ * This class implements the storage handling i.e. the possibilities 
+ * to save and load data from an external resource
+ * @author Salim Daoud, saldao-8
+ */
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,7 +20,7 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
-public class FileHandler
+public class StorageHandler
 {
     private static final String SYSTEM_DATA_FILE_NAME = "saldao8_Files/customer-full-info.dat";
     private static final String TRANSACTION_FILE_PREFIX = "saldao8_Files/transactions-account-";
@@ -25,7 +31,7 @@ public class FileHandler
     /**
      * Constructor
      */
-    public FileHandler()
+    public StorageHandler()
     {
         dataFile = new File(SYSTEM_DATA_FILE_NAME);
     }
@@ -60,13 +66,10 @@ public class FileHandler
             {
                 try 
                 {
-                    //https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html
-                    //https://docs.oracle.com/javase/7/docs/api/java/io/OutputStreamWriter.html#close()
                     oos.close();
                 }
                 catch (IOException e) 
                 {
-                  //https://softwareengineering.stackexchange.com/q/363161 - faild to close but inout
                 }
             }
         }
@@ -83,13 +86,12 @@ public class FileHandler
 
         // already checked the existence when creating the GUI, but the path or file
         // could been removed or modified in between (low possibility though)
-        //https://stackoverflow.com/a/1816707
         if(dataFile.isFile())
         {
             ObjectInputStream ois = null;
             try
             {
-                FileInputStream fos = new FileInputStream(SYSTEM_DATA_FILE_NAME); // todo check if file exists first
+                FileInputStream fos = new FileInputStream(SYSTEM_DATA_FILE_NAME);
                 ois = new ObjectInputStream(fos);
                 
                 int nrOfCustomers = (int) ois.readInt();
@@ -118,7 +120,6 @@ public class FileHandler
                     }
                     catch (IOException e) 
                     {
-                      //https://softwareengineering.stackexchange.com/q/363161 - faild to close but inout
                     }
                 }
             }
@@ -155,7 +156,7 @@ public class FileHandler
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");           
             String transactionDate = dateFormat.format(currentDate);  
             fw.write("Printout date: " + transactionDate);
-            //https://stackoverflow.com/a/18549788 //https://examples.javacodegeeks.com/core-java/io/filewriter/java-filewriter-example/
+            //https://stackoverflow.com/a/18549788
             fw.write(System.lineSeparator()); 
             
             // output transactions
@@ -176,8 +177,6 @@ public class FileHandler
         }
         catch(IOException ex)
         {
-            //https://stackoverflow.com/q/6779787
-            //https://examples.javacodegeeks.com/core-java/io/ioexception/java-io-ioexception-how-to-solve-ioexception/
             JOptionPane.showMessageDialog(null, "IO operation failed. IOException caught with message: " + "\n" + ex.getMessage(), "Alert", JOptionPane.ERROR_MESSAGE);   
         }
         finally {
@@ -185,7 +184,7 @@ public class FileHandler
             {
                 try 
                 {
-                    fw.close(); // todo catch? https://stackoverflow.com/a/5122970
+                    fw.close();
                     
                     if(writtenSuccessfully)
                     {
@@ -195,7 +194,6 @@ public class FileHandler
                 }
                 catch (IOException e) 
                 {
-                    // nothing to do here except log the exception
                 }
             }
         }

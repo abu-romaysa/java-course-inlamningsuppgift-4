@@ -1,12 +1,5 @@
 package saldao8;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 /**
  * This class implements the bank logic that manages customers and their
  * accounts
@@ -19,7 +12,7 @@ import java.util.ArrayList;
 public class BankLogic implements AccountTypes
 {
     private ArrayList<Customer> customers = new ArrayList<Customer>();
-    private FileHandler fileHandler = new FileHandler(); 
+    private StorageHandler storageHandler = new StorageHandler(); 
 
     /**
      * Constructor
@@ -322,7 +315,7 @@ public class BankLogic implements AccountTypes
      */
     public void saveAllCustomersInfo()
     {
-        fileHandler.saveCustomersToStorage(customers);
+        storageHandler.saveCustomersToStorage(customers);
     }
     
     /**
@@ -330,7 +323,7 @@ public class BankLogic implements AccountTypes
      */
     public void loadAllCustomersInfo()
     {
-        customers.addAll(fileHandler.loadCustomersFromStorage());
+        customers.addAll(storageHandler.loadCustomersFromStorage());
     }
 
     /**
@@ -344,7 +337,7 @@ public class BankLogic implements AccountTypes
     public boolean saveAccountTransactions(int accountId, ArrayList<String> transactions, String personalIdentityNumber)
     {
         double balance = this.getBalance(personalIdentityNumber, accountId);
-        return fileHandler.saveTransactionsToStorage(accountId, transactions, Double.toString(balance));
+        return storageHandler.saveTransactionsToStorage(accountId, transactions, Double.toString(balance));
     }
     
     /**
@@ -354,7 +347,7 @@ public class BankLogic implements AccountTypes
      */
     public boolean sysHasStoredCustomers()
     {
-        return fileHandler.hasStoredCustomers();
+        return storageHandler.hasStoredCustomers();
     }
     
     /**

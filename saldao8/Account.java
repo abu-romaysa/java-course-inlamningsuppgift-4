@@ -1,7 +1,5 @@
 package saldao8;
 
-import java.io.Serializable;
-
 /**
  * This class implements an abstract base class for accounts and it's needed support and management
  * as transactions, account information etc.
@@ -9,6 +7,7 @@ import java.io.Serializable;
  * @author Salim Daoud, saldao-8
  */
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
