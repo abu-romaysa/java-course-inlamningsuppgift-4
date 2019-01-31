@@ -813,12 +813,10 @@ public class OverviewLogicWin extends JFrame implements AccountTypes
     private boolean hasOnlyLetters(String input)
     {        
       //https://stackoverflow.com/a/3059373
-      System.out.println(input);
       for(int i = 0; i<input.length(); i++)
       {
          if(!Character.isLetter(input.charAt(i)))
          {
-             System.out.println(input.charAt(i));
             return false;
          }
       }
